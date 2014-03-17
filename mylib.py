@@ -3,6 +3,8 @@ import pickle
 import math
 from random import gauss
 
+#Did this new commit work?
+
 def split_cols(f, n_columns, column):
 
     """ This function splits a 2D array with n number of columns 
