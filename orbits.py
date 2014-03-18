@@ -14,3 +14,18 @@ def orbitFromFile(filename, n_steps, t_tot, potential_optn, disk_optn, bulge_opt
 		tmp.compute_orbit(disk_optn, bulge_optn, halo_optn)
 		output_fn = 'particle_'+str(i)+'.txt'
 		tmp.write_file(output_fn)
+
+def orbitFromInit(x, y, z, vx, vy, vz, sigpos, sigvel, n_particles, output_optn, n_steps, t_tot, potential_optn, disk_optn, bulge_optn, halo_optn):
+
+	initials = numpy.array([float(x), float(y), float(z), float(vx), float(vy), float(vz)])
+	sigpos = float(sigpos); sigvel = float(sigvel);
+	n_steps = int(n_steps); n_particles = int(n_particles)
+	t_tot = float(t_tot)
+
+	for i in range(n_particles):
+		tmp = ns.Particle(initials, potential_optn)
+		tmp.get_timesteps(t_tot, n_steps)
+		tmp.gauss_coords(sigpos, sigvel)
+		tmp.compute_orbit(disk_optn, bulge_optn, halo_optn)
+		output_fn = 'particle_'+str(i)+'.txt'
+		tmp.write_file(output_fn)

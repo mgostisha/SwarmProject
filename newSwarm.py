@@ -20,7 +20,6 @@ class Particle(object):
 
 	def get_timesteps(self, time, steps):
 		self.t = numpy.linspace(0,time,steps)
-#		return numpy.linspace(0,time,steps)
 
 	def gauss_coords(self, sigpos, sigvel):
 		x = gauss(self.arr[0], sigpos)
@@ -37,19 +36,9 @@ class Particle(object):
 
 		if(self.potential=='wolfire'):
 			self.orbit = inte.odeint(mf.WolfirePotential, self.arr, self.t, args=(disk_optn,bulge_optn,halo_optn))
-#		return final
 
 	def write_file(self, filename):
 		fn_head = 'x\ty\tz\tvx\tvy\tvz\n-\t-\t-\t--\t--\t--'
 		to_write = numpy.savetxt(filename, self.orbit, delimiter='\t', header=fn_head, fmt='%.3f')
 
-def norbits(arr, potential, sigpos, sigvel, time, steps):
-
-	for i in range(100):
-		tmp = Particle(arr, potential)
-		tmp.get_timesteps(time, steps)
-		tmp.gauss_coords(sigpos, sigvel)
-		tmp.compute_orbit()
-		filename = 'particle_'+str(i)+'.txt'
-		tmp.write_file(filename)
 
