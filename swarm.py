@@ -2,6 +2,7 @@ import urllib as url
 import zipfile as zippy
 import numpy 
 import glob
+import os
 from matplotlib import rc, rcParams
 from pylab import *
 import matplotlib.pyplot as plt
@@ -163,6 +164,48 @@ def orbitAnimate(dictlist, xkey, ykey):
                 new_y.append(dictlist[j][ykey][t])
             points.set_data((new_x, new_y))
         plt.pause(waittime)
+
+def timestep_files(filedir):
+
+ 	filenames = []
+ 	arrlist = []
+ 	globkey = filedir+'/*.txt'
+ 	fn_head = 'x\ty\tz\tvx\tvy\tvz\n-\t-\t-\t--\t--\t--'
+
+ 	for files in glob.glob(globkey):
+ 		filenames.append(files)
+
+ 	for i in range(len(filenames)):
+ 		temparr = text2array(filenames[i])
+ 		arrlist.append(temparr)
+
+	for i in range(len(arrlist[0])):
+		output_fn = filedir+'/timestep_'+str(i)+'.txt'
+		temparr = []
+
+ 		for j in range(len(arrlist)):
+ 			temparr = numpy.append(temparr, arrlist[j][i])
+ 			temparr = numpy.array(temparr)
+ 			#print temparr
+
+ 		temparr = numpy.reshape(temparr, (len(filenames), len(arrlist[0][0])))
+ 		to_write = numpy.savetxt(output_fn, temparr, delimiter='\t', header = fn_head, fmt = '%.3f')
+ 		print 'Finished: Timestep '+str(i)
+
+ 	delete_old = raw_input('Do you want to delete the old particle files? Enter yes or no.\n')
+ 	delete_old.lower()
+
+ 	if (delete_old == 'yes'):
+ 		cmd = 'rm '+filedir+'/particle_*.txt'
+ 		os.system(cmd)
+
+
+
+
+
+
+
+			
 
 
 

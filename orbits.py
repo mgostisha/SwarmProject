@@ -1,4 +1,4 @@
-import newSwarm as ns
+import particles as part
 import mylib
 import numpy
 
@@ -9,7 +9,7 @@ def orbitFromFile(filename, n_steps, t_tot, potential_optn, disk_optn, bulge_opt
 	t_tot = float(t_tot)
 
 	for i in range(len(initials)):
-		tmp = ns.Particle(initials[i], potential_optn)
+		tmp = part.Particle(initials[i], potential_optn)
 		tmp.get_timesteps(t_tot, n_steps)
 		tmp.compute_orbit(disk_optn, bulge_optn, halo_optn)
 		output_fn = 'particle_'+str(i)+'.txt'
@@ -23,7 +23,7 @@ def orbitFromInit(x, y, z, vx, vy, vz, sigpos, sigvel, n_particles, output_optn,
 	t_tot = float(t_tot)
 
 	for i in range(n_particles):
-		tmp = ns.Particle(initials, potential_optn)
+		tmp = part.Particle(initials, potential_optn)
 		tmp.get_timesteps(t_tot, n_steps)
 		tmp.gauss_coords(sigpos, sigvel)
 		tmp.compute_orbit(disk_optn, bulge_optn, halo_optn)
