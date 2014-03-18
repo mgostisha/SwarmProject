@@ -1,6 +1,7 @@
 import mylib
 import myfuncs as mf
 import numpy
+import math
 import scipy.integrate as inte
 from random import gauss
 
@@ -12,11 +13,18 @@ class Particle(object):
 		self.arr = arr
 		self.potential = potential
 
-	def print_coords(self):
-		print self.arr[0:3]
+	def check_params(self):
+		invalids = ''
+		if (math.fabs(self.arr[0]) > 50.0): invalids += 'error: x cannot be greater than |50.0| kpc; '
+		if (math.fabs(self.arr[1]) > 50.0): invalids += 'error: y cannot be greater than |50.0| kpc; '
+		if (math.fabs(self.arr[2]) > 30.0): invalids += 'error: z cannot be greater than |30.0| kpc; '
+		if (math.fabs(self.arr[3]) > 1000.0): invalids += 'error: vx cannot be greater than |1000.0| km/s; '
+		if (math.fabs(self.arr[4]) > 1000.0): invalids += 'error: vx cannot be greater than |1000.0| km/s; '
+		if (math.fabs(self.arr[5]) > 1000.0): invalids += 'error: vx cannot be greater than |1000.0| km/s; '
 
-	def print_vels(self):
-		print self.arr[3:6]
+		if (invalids != ''):
+			print invalids
+			raise SystemExit, 0
 
 	def get_timesteps(self, time, steps):
 		self.t = numpy.linspace(0,time,steps)
