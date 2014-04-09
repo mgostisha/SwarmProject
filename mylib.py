@@ -28,15 +28,16 @@ def text2array(filename):
 
 	header1 = file_open.readline()
 	header2 = file_open.readline()
-	columns = 6
+	columns = 7
 
 	count = 0
 	new_array = numpy.array([])
 
 	for line in file_open:
-		line=line.strip().split()
-		new_array = numpy.append(new_array,line).astype(float)
-		count += 1
+		if(line != '' or line != '\n'):
+			line=line.strip().split()
+			new_array = numpy.append(new_array,line).astype(float)
+			count += 1
 
 	rows = count
 	new_array = numpy.reshape(new_array, (rows,columns))
@@ -181,55 +182,80 @@ def computeCourantTime(dx, dy, dz, vx, vy, vz, C):
 
 	return tstep
 
-def computeVelField(key, *args, **kwargs):
+def dragParameters(vfield, denfield, vzero, vRsc, nHcen, nHcen2, Rscpow, alphapow, nHdisk1, Rscdisk1, Zscdisk1,
+	nHdisk2, Rscdisk2, Zscdisk2, nHdisk3, Rscdisk3, Zscdisk3):
 
-	""" Computes the velocity field in the galaxy for drag calculation"""
+	""" Decision function to decide which drag parameters should be used in the simulation. """
 
-	if (key == 'zero'):
-		vfield = 0.0
+	rhoparams = []
+	velparams = []
 
-	elif (key == 'match'):
-		R = math.fabs(kwargs.get('R', None))
-		gr = math.fabs(kwargs.get('gr', None))
-		print kwargs
-		vfield = math.sqrt(R*gr)
+	# Get velocity field choice and put parameters into list
+	if (vfield == 'voutflow'):
+		velparams.append(vzero)
+		if(vRsc != 0.0):
+			velparams.append(vRsc)
+		else:
+			velparams.append(1.0)
 
-	elif (key == 'outflow'):
-		v0 = kwargs.get('v0', None)
-		R = kwargs.get('R', None)
-		R_sc = kwargs.get('R_sc', None)
-		vfield = v0*R/R_sc
+	# Get density field choice and put parameters into list
+	if (denfield == 'constantrho'):
+		rhoparams.append(nHcen)
+	elif (denfield == 'powerlawrho'):
+		rhoparams.append(nHcen2)
+		if(Rscpow != 0.0):
+			rhoparams.append(Rscpow)
+		else:
+			rhoparams.append(1.0)
+		rhoparams.append(alphapow)
+	elif (denfield == 'disks'):
+		if (Rscdisk1 != 0.0 and Zscdisk1 != 0.0):
+			rhoparams.append(nHdisk1)
+			rhoparams.append(Rscdisk1)
+			rhoparams.append(Zscdisk1)
+		if (Rscdisk2 != 0.0 and Zscdisk2 != 0.0):
+			rhoparams.append(nHdisk2)
+			rhoparams.append(Rscdisk2)
+			rhoparams.append(Zscdisk2)
+		if (Rscdisk3 != 0.0 and Zscdisk3 != 0.0):
+			rhoparams.append(nHdisk3)
+			rhoparams.append(Rscdisk3)
+			rhoparams.append(Zscdisk3)
 
-	return vfield
+	return rhoparams, velparams
 
-def computeDensityField(key, rho0, *args, **kwargs):
+def computeDrag(params, vfield, denfield, r, vr, gr, z, vz, N_c):
 
-	""" Computes the density field in the halo for drag calculation"""
+	""" Takes the parameter array from the reduction function and additional internal parameters for the potential
+	match velocity field and calculates the drag. """
 
-	if (key == 'zero'):
-		rhofield = 0.0
+	denparams = params[0]
+	velparams = params[1]
+	C_D = 1.0
 
-	elif (key == 'constant'):
-		rhofield = rho0
+	if (vfield == 'zerov'):
+		v = 0.0
+	elif (vfield == 'potentialmatch'):
+		v = math.sqrt(r * math.fabs(gr))
+	elif (vfield == 'voutflow'):
+		v = velparams[0] * r / velparams[1]
 
-	elif (key == 'powerlaw'):
-		alpha = kwargs.get('alpha', None)
-		R = kwargs.get('R', None)
-		R_sc = kwargs.get('R_sc', None)
-		rhofield = rho0 * math.pow(R+R_sc, alpha)
+	if (denfield == 'constantrho'):
+		nH = denparams[0]
+	elif (denfield == 'powerlawrho'):
+		nH = denparams[0]/((1 + (r / denparams[1])**2)**denparams[2])
+	elif (denfield == 'disks'):
+		nH = 0.0
+		for i in range(0, len(rhoparams), 3):
+			nH += denparams[i] * math.pow(numpy.e, r/denparams[i+1]) * math.pow(numpy.e, z/denparams[i+2])
 
-	elif (key == 'disks'):
-		R = kwargs.get('R', None)
-		Z = kwargs.get('Z', None)
-		R_sc = kwargs.get('R_sc', None)
-		Z_sc = kwargs.get('Z_sc', None)
+	adr = -C_D/(2.0*N_c) * nH * math.fabs(vr - v) * (vr - v)
+	adz = -C_D/(2.0*N_c) * nH * math.fabs(vz - 0.0) * (vz - 0.0)
 
-		rhofield = 0.0
+	return adr, adz
 
-		for i in range(len(R_sc)):
-			rhofield += rho0*math.pow(numpy.e, R/R_sc[i])*math.pow(numpy.e, Z/Z_sc[i])
 
-	return rhofield
+
 
 
 
