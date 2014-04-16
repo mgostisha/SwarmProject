@@ -1,7 +1,6 @@
 import sys
 import mylib
 import orbits
-import numpy
 
 xi = sys.argv[1]
 yi = sys.argv[2]

@@ -3,46 +3,37 @@
 import numpy as np
 import mylib
 
-def PointSource(y, t):
+def PointSource(y, t, drag_optn, dragparams, velfield, denfield, N_c):
 	""" Point Source Potential """
 
 	# Define Constants 
-	G = 4*(np.pi**2)
-	M = 1.
+	G = 0.0045
+	M = 1e+11
 
 	# Compute/designate spatial shorthands
+	z = y[2]
 	r = np.sqrt(y[0]**2 + y[1]**2 + y[2]**2)
 	vx = y[3]
 	vy = y[4]
 	vz = y[5]
+	vr = np.sqrt(vx**2 + vy**2)
 
 	# Compute gravitational accelerations
 	gx = -y[0]/r * G*M/r/r
 	gy = -y[1]/r * G*M/r/r
 	gz = -y[2]/r * G*M/r/r
 
+	gr = np.sqrt(gx**2 + gy**2)
+	r2 = np.sqrt(y[0]**2 + y[1]**2)
+
+	# Compute and add drag if wanted
+	if (drag_optn == 'yes'):
+		drag_comps = mylib.computeDrag(dragparams, velfield, denfield, r2, vr, gr, z, vz, N_c)
+		gx = (vx/vr) * drag_comps[0] + gx
+		gy = (vy/vr) * drag_comps[0] + gy
+		gz = drag_comps[1] + gz
+
 	return  vx, vy, vz, gx, gy, gz
-
-def PointSourceWithDrag(y, t):
-	""" Point Source Potential with Drag """
-
-	# Define Constants
-	G = 0.00449
-	M = 10**10
-	C_D = 1.
-	denratio = 1./32400.
-
-	# Compute/designate spatial shorthands
-	r = np.sqrt(y[0]**2 + y[1]**2 + y[2]**2)
-	vx = y[3]/1.023; vy = y[4]/1.023; vz = y[5]/1.023;
-	v = np.sqrt(vx**2 + vy**2 + vz**2)
-
-	# Compute gravitational accelerations
-	gx = 0.5*C_D*v*vx*denratio - y[0]/r * G*M/r/r
-	gy = 0.5*C_D*v*vy*denratio - y[1]/r * G*M/r/r
-	gz = 0.5*C_D*v*vz*denratio - y[2]/r * G*M/r/r
-
-	return vx, vy, vz, gx, gy, gz
 
 def WolfirePotential(y, t, disk, bulge, halo, drag_optn, dragparams, velfield, denfield, N_c):
 	""" All constants are in kpc (Ci, ai, bi) and km s^-1 (v_circ) """
@@ -93,12 +84,17 @@ def WolfirePotential(y, t, disk, bulge, halo, drag_optn, dragparams, velfield, d
 	# Compute Drag
 	if (drag_optn == 'yes'):
 		drag_comps = mylib.computeDrag(dragparams, velfield, denfield, r, vr, gr, z, vz, N_c)
-		gr = drag_comps[0] + gr
-		gz = drag_comps[1] + gz
+		dragx = (vx/vr) * drag_comps[0]
+		dragy = (vy/vr) * drag_comps[0]
+		dragz = drag_comps[1]
 
+		gx = dragx + (y[0]/r) * gr
+		gy = dragy + (y[1]/r) * gr
+		gz = dragz + gz
+	else:
+		gx = (y[0]/r) * gr
+		gy = (y[1]/r) * gr
 
-	gx = gr * y[0]/r
-	gy = gr * y[1]/r
 
 	return vx, vy, vz, gx, gy, gz
 

@@ -67,7 +67,8 @@ class Particle(object):
 		""" This function calculates the orbits of the particle. """
 
 		if(self.potential=='pointsrc'):
-			self.orbit = inte.odeint(mf.PointSource, self.arr, self.t)
+			self.orbit = inte.odeint(mf.PointSource, self.arr, self.t, args=(drag_optn, dragparams, vfield,
+			denfield, self.Nc))
 
 		if(self.potential=='wolfire'):
 			self.orbit = inte.odeint(mf.WolfirePotential, self.arr, self.t, args=(disk_optn,bulge_optn,halo_optn,

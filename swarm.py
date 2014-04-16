@@ -130,8 +130,8 @@ def plotData(dictlist, xkey, ykey):
 	"""rc('font', **{'family':'serif', 'serif':['Computer Modern']})"""
 
 	axes().set_aspect('equal')
-	ylabel(ykey+' (kpc)')
-	xlabel(xkey+' (kpc)')
+	ylabel(ykey+' (pc)')
+	xlabel(xkey+' (pc)')
 	title('Orbits')
 
 	for i in range(size(dictlist)):
@@ -143,11 +143,11 @@ def orbitAnimate(dictlist, xkey, ykey):
     """for i in range(size(dictlist)):"""
     """plt.plot(dictlist[i][xkey],dictlist[i][ykey])"""
     plt.plot((0), marker='o', linestyle='None')
-    ylabel(ykey+' (kpc)')
-    xlabel(xkey+' (kpc)')
+    ylabel(ykey+' (pc)')
+    xlabel(xkey+' (pc)')
     title('Orbit Animation')
-    minx = min(dictlist[0][xkey])-1.0; miny = min(dictlist[0][ykey])-0.5;
-    maxx = max(dictlist[0][xkey])+1.0; maxy = max(dictlist[0][ykey])+0.5;
+    minx = min(dictlist[0][xkey])-1000.0; miny = min(dictlist[0][ykey])-500.0;
+    maxx = max(dictlist[0][xkey])+1000.0; maxy = max(dictlist[0][ykey])+500.0;
     waittime = 10./len(dictlist[0]['x'])
 
     for t in range(len(dictlist[0][xkey])):
