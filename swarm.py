@@ -137,11 +137,23 @@ def plotData(dictlist, xkey, ykey):
 	for i in range(size(dictlist)):
 		plot(dictlist[i][xkey], dictlist[i][ykey])
 
+def plotData3D(dictlist, xkey, ykey, zkey):
+
+	fig = figure()
+	ax = Axes3D(fig)
+	ax.set_xlabel(xkey+' (pc)')
+	ax.set_ylabel(ykey+' (pc)')
+	ax.set_zlabel(zkey+' (pc)')
+	title('Orbits')
+
+	for i in range(size(dictlist)):
+		plot(dictlist[i][xkey], dictlist[i][ykey], dictlist[i][zkey])
+
+	show()
+
 def orbitAnimate(dictlist, xkey, ykey):
     
     fig, ax = plt.subplots()
-    """for i in range(size(dictlist)):"""
-    """plt.plot(dictlist[i][xkey],dictlist[i][ykey])"""
     plt.plot((0), marker='o', linestyle='None')
     ylabel(ykey+' (pc)')
     xlabel(xkey+' (pc)')
