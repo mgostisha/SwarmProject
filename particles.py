@@ -67,12 +67,12 @@ class Particle(object):
 		""" This function calculates the orbits of the particle. """
 
 		if(self.potential=='pointsrc'):
-			self.orbit = inte.odeint(mf.PointSource, self.arr, self.t, args=(drag_optn, dragparams, vfield,
-			denfield, self.Nc))
+			self.orbit = inte.odeint(mf.PointSource, self.arr, self.t, rtol=1e-3, atol=1e-3, args=(drag_optn, dragparams,
+				vfield, denfield, self.Nc))
 
 		if(self.potential=='wolfire'):
-			self.orbit = inte.odeint(mf.WolfirePotential, self.arr, self.t, args=(disk_optn,bulge_optn,halo_optn,
-				drag_optn, dragparams, vfield, denfield, self.Nc))
+			self.orbit = inte.odeint(mf.WolfirePotential, self.arr, self.t, rtol=1e-4, atol=1e-4, args=(disk_optn, bulge_optn,
+				halo_optn, drag_optn, dragparams, vfield, denfield, self.Nc))
 
 	def write_file(self, filename):
 
