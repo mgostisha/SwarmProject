@@ -29,8 +29,9 @@ Zscdisk2 = sys.argv[22]
 nhdisk3 = sys.argv[23]
 Rscdisk3 = sys.argv[24]
 Zscdisk3 = sys.argv[25]
+tol = sys.argv[26]
 
 
 orbits.orbitFromFile(filename, n_steps, t_total, potential, disk, bulge, halo, drag_optn, vfield, vzero, vRsc,
 	denfield, nhcen, nhcen2, Rscpow, alphapow, nhdisk1, Rscdisk1, Zscdisk1, nhdisk2, Rscdisk2, Zscdisk2, nhdisk3,
-	Rscdisk3, Zscdisk3)
+	Rscdisk3, Zscdisk3, tol)

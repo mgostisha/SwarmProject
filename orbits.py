@@ -4,7 +4,7 @@ import numpy
 
 def orbitFromFile(filename, n_steps, t_tot, potential_optn, disk_optn, bulge_optn, halo_optn, drag_optn, 
 	vfield, vzero, vRsc, denfield, nHcen, nHcen2, Rscpow, alphapow, nHdisk1, Rscdisk1, Zscdisk1, nHdisk2,
-	Rscdisk2, Zscdisk2, nHdisk3, Rscdisk3, Zscdisk3):
+	Rscdisk2, Zscdisk2, nHdisk3, Rscdisk3, Zscdisk3, tol):
 
 	#Read in file for initial arrays
 	initials = mylib.text2array(filename)
@@ -28,9 +28,10 @@ def orbitFromFile(filename, n_steps, t_tot, potential_optn, disk_optn, bulge_opt
 	Zscdisk1 = float(Zscdisk1) * 1000.
 	Zscdisk2 = float(Zscdisk2) * 1000.
 	Zscdisk3 = float(Zscdisk3) * 1000.
+	tol = 10 ** float(tol)
 
 	for i in range(len(initials)):
-		tmp = part.Particle(initials[i], potential_optn)
+		tmp = part.Particle(initials[i], potential_optn, tol)
 		tmp.get_timesteps(t_tot, n_steps)
 		tmp.convert_units()
 		dragparams = mylib.dragParameters(vfield, denfield, vzero, vRsc, nHcen, nHcen2, Rscpow, 
@@ -42,7 +43,7 @@ def orbitFromFile(filename, n_steps, t_tot, potential_optn, disk_optn, bulge_opt
 def orbitFromInit(x, y, z, vx, vy, vz, sigpos, sigvel, n_particles, n_steps, t_tot, 
 	potential_optn, disk_optn, bulge_optn, halo_optn, drag_optn, vfield, vzero, vRsc,
 	denfield, nHcen, nHcen2, Rscpow, alphapow, nHdisk1, Rscdisk1, Zscdisk1, nHdisk2,
-	Rscdisk2, Zscdisk2, nHdisk3, Rscdisk3, Zscdisk3, colden, sigden):
+	Rscdisk2, Zscdisk2, nHdisk3, Rscdisk3, Zscdisk3, colden, sigden, tol):
 
 	# Initialize array and convert to corrent data types
 	initials = numpy.array([float(x), float(y), float(z), float(vx), float(vy), float(vz), float(colden)])
@@ -73,9 +74,10 @@ def orbitFromInit(x, y, z, vx, vy, vz, sigpos, sigvel, n_particles, n_steps, t_t
 	Zscdisk1 = float(Zscdisk1) * 1000.
 	Zscdisk2 = float(Zscdisk2) * 1000.
 	Zscdisk3 = float(Zscdisk3) * 1000.
+	tol = 10 ** float(tol)
 
 	for i in range(n_particles):
-		tmp = part.Particle(initials, potential_optn)
+		tmp = part.Particle(initials, potential_optn, tol)
 		tmp.get_timesteps(t_tot, n_steps)
 		tmp.gauss_coords(sigpos, sigvel, sigden)
 		tmp.convert_units()
