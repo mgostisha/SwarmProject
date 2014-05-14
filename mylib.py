@@ -247,7 +247,7 @@ def computeDrag(params, vfield, denfield, r, vr, gr, z, vz, N_c):
 	elif (denfield == 'disks'):
 		nH = 0.0
 		for i in range(0, len(rhoparams), 3):
-			nH += denparams[i] * math.pow(numpy.e, r/denparams[i+1]) * math.pow(numpy.e, z/denparams[i+2])
+			nH += denparams[i] * math.pow(numpy.e, -r/denparams[i+1]) * math.pow(numpy.e, -z/denparams[i+2])
 
 	adr = -C_D/(2.0*N_c) * nH * math.fabs(vr - v) * (vr - v)
 	adz = -C_D/(2.0*N_c) * nH * math.fabs(vz - 0.0) * (vz - 0.0)
