@@ -4,6 +4,8 @@ import numpy
 import math
 import scipy.integrate as inte
 from random import gauss
+import bokeh.plotting as bok
+import six.moves as sixm
 
 class Particle(object):
 
@@ -81,5 +83,27 @@ class Particle(object):
 
 		fn_head = 'x\ty\tz\tvx\tvy\tvz\n-\t-\t-\t--\t--\t--'
 		to_write = numpy.savetxt(filename, self.orbit, delimiter='\t', header=fn_head, fmt='%.3f')
+
+	def bokeh_plot(self):
+
+		""" This function creates an html bokeh plot to send the user. """
+
+		xarr = numpy.array(self.orbit[:,0]) / 1000.
+		yarr = numpy.array(self.orbit[:,1]) / 1000.
+		radii = numpy.array([0.1]*len(xarr))
+		colors = ["#%02x%02x%02x" % (r, g, 150) for r, g in sixm.zip(numpy.floor(50+2*xarr), numpy.floor(30+2*yarr))]
+
+		bok.output_file("sample_orbit.html", title="Sample Orbit Calculation")
+		bok.scatter(xarr, yarr, radius=radii, radius_units="data", fill_color=colors, fill_alpha=0.6,
+			line_color="red", line_width=1, line_alpha=0.3, Name="sample_orbit")
+		bok.show()
+
+
+
+
+
+
+
+
 
 
