@@ -96,6 +96,8 @@ class Particle(object):
 		bok.output_file("sample_orbit.html", title="Sample Orbit Calculation")
 		bok.scatter(xarr, yarr, radius=radii, radius_units="data", fill_color=colors, fill_alpha=0.6,
 			line_color="red", line_width=1, line_alpha=0.3, Name="sample_orbit")
+		bok.xaxis()[0].axis_label='x (kpc)'
+		bok.yaxis()[0].axis_label='y (kpc)'
 		bok.show()
 
 
