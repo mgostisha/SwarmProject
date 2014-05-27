@@ -1,6 +1,7 @@
 import particles as part
 import mylib
 import numpy
+import shutil
 
 def orbitFromFile(filename, n_steps, t_tot, potential_optn, disk_optn, bulge_optn, halo_optn, drag_optn, 
 	vfield, vzero, vRsc, denfield, nHcen, nHcen2, Rscpow, alphapow, nHdisk1, Rscdisk1, Zscdisk1, nHdisk2,
@@ -39,6 +40,11 @@ def orbitFromFile(filename, n_steps, t_tot, potential_optn, disk_optn, bulge_opt
 		tmp.compute_orbit(disk_optn, bulge_optn, halo_optn, drag_optn, dragparams, vfield, denfield)
 		output_fn = 'particle_'+str(i)+'.txt'
 		tmp.write_file(output_fn)
+		#if (i==0):
+		#	tmp.bokeh_plot()
+		#	source = './sample_orbit.html'
+		#	destination = '/d/www/gostisha/services/'
+		#	shutil.move(source, destination)
 
 def orbitFromInit(x, y, z, vx, vy, vz, sigpos, sigvel, n_particles, n_steps, t_tot, 
 	potential_optn, disk_optn, bulge_optn, halo_optn, drag_optn, vfield, vzero, vRsc,
@@ -86,6 +92,11 @@ def orbitFromInit(x, y, z, vx, vy, vz, sigpos, sigvel, n_particles, n_steps, t_t
 		tmp.compute_orbit(disk_optn, bulge_optn, halo_optn, drag_optn, dragparams, vfield, denfield)
 		output_fn = 'particle_'+str(i)+'.txt'
 		tmp.write_file(output_fn)
+		#if (i==0):
+		#	tmp.bokeh_plot()
+		#	source = './sample_orbit.html'
+		#	destination = '/d/www/gostisha/services/'
+		#	shutil.move(source, destination)
 
 
 
