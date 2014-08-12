@@ -9,8 +9,10 @@ import six.moves as sixm
 
 class Particle(object):
 
+	# Global file header
 	fn_head = 'x\ty\tz\tvx\tvy\tvz\n-\t-\t-\t--\t--\t--'
 
+	# Constructor
 	def __init__(self, arr, potential, tol):
 		self.arr = arr
 		self.potential = potential
@@ -18,6 +20,8 @@ class Particle(object):
 		self.tol = tol
 		self.arr = numpy.delete(self.arr, -1)
 
+	# Check to see if the input is in valid ranges
+	# NOTE: Not used anymore
 	def check_params(self):
 
 		""" This function checks the input parameters to make sure they're valid, exits the program if they aren't. """
@@ -34,12 +38,14 @@ class Particle(object):
 			print invalids
 			raise SystemExit, 0
 
+	# Timestep array creation
 	def get_timesteps(self, time, steps):
 
 		""" This function generates an array of constant timesteps to be used for the simulation. """
 
 		self.t = numpy.linspace(0,time,steps)
 
+	# Randomized Gaussian Coordinates
 	def gauss_coords(self, sigpos, sigvel, sigden):
 
 		""" This function produces a coordinate from a gaussian distribution given the initial parameters. """
@@ -54,6 +60,7 @@ class Particle(object):
 		self.arr = numpy.array([x, y, z, vx, vy, vz])
 		self.Nc = N_c
 
+	# Unit Conversion
 	def convert_units(self):
 
 		""" This function converts the space coordinates, velocities, and column density to pc, M_sun, and Myr """
@@ -65,6 +72,7 @@ class Particle(object):
 		self.arr[5] *= 1.023
 		self.Nc = (10 ** self.Nc) * (3.09e+18)**2
 
+	# Orbit Calculation
 	def compute_orbit(self, disk_optn, bulge_optn, halo_optn, drag_optn, dragparams, vfield, denfield):
 
 		""" This function calculates the orbits of the particle. """
@@ -77,6 +85,7 @@ class Particle(object):
 			self.orbit = inte.odeint(mf.WolfirePotential, self.arr, self.t, rtol=self.tol, atol=self.tol,
 				args=(disk_optn, bulge_optn, halo_optn, drag_optn, dragparams, vfield, denfield, self.Nc))
 
+	# File Writer
 	def write_file(self, filename):
 
 		""" This function takes the 2D array produced by the orbit calculation and writes it to a text file. """
@@ -84,6 +93,8 @@ class Particle(object):
 		fn_head = 'x\ty\tz\tvx\tvy\tvz\n-\t-\t-\t--\t--\t--'
 		to_write = numpy.savetxt(filename, self.orbit, delimiter='\t', header=fn_head, fmt='%.3f')
 
+	# Bokeh Plot
+	# NOTE: Not utilized yet
 	def bokeh_plot(self):
 
 		""" This function creates an html bokeh plot to send the user. """

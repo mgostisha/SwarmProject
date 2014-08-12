@@ -99,22 +99,6 @@ def WolfirePotential(y, t, disk, bulge, halo, drag_optn, dragparams, velfield, d
 
 	return vx, vy, vz, gx, gy, gz
 
-def NewtonTest(y, t):
-
-	G = 0.0045
-	M = 1e+9
-
-	r = np.sqrt(y[0]**2 + y[1]**2)
-	vr = np.sqrt(y[3]**2 + y[4]**2)
-	vx = y[3]
-	vy = y[4]
-	vz = y[5]
-
-	gx = (-y[0]/(2.0*r)) * (G*M/r/r) * (1e+4)
-	gy = (-y[1]/(2.0*r)) * (G*M/r/r) * (1e+4)
-	gz = 0
-
-	return vx, vy, vz, gx, gy, gz
 
 
 

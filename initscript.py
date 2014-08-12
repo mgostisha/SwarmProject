@@ -2,6 +2,7 @@ import sys
 import mylib
 import orbits
 
+# Get parameters from shell script
 xi = sys.argv[1]
 yi = sys.argv[2]
 zi = sys.argv[3]
@@ -39,6 +40,7 @@ colden = sys.argv[34]
 sigden = sys.argv[35]
 tol = sys.argv[36]
 
+# Send parameters to calculation function
 orbits.orbitFromInit(xi, yi, zi, vxi, vyi, vzi, sigpos, sigvel, n_part, n_steps, t_total, potential, disk, bulge, halo,
 	drag_optn, vfield, vzero, vRsc, denfield, nhcen, nhcen2, Rscpow, alphapow, nhdisk1, Rscdisk1, Zscdisk1, nhdisk2,
 	Rscdisk2, Zscdisk2, nhdisk3, Rscdisk3, Zscdisk3, colden, sigden, tol)

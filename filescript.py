@@ -2,7 +2,8 @@ import sys
 import mylib
 import orbits
 
-""" This NEEDS a data file as an argument! """
+# This NEEDS a data file as an argument!
+# Get parameters from shell script
 
 filename = sys.argv[1]
 n_steps = sys.argv[2]
@@ -31,7 +32,7 @@ Rscdisk3 = sys.argv[24]
 Zscdisk3 = sys.argv[25]
 tol = sys.argv[26]
 
-
+# Send parameters to calculation function
 orbits.orbitFromFile(filename, n_steps, t_total, potential, disk, bulge, halo, drag_optn, vfield, vzero, vRsc,
 	denfield, nhcen, nhcen2, Rscpow, alphapow, nhdisk1, Rscdisk1, Zscdisk1, nhdisk2, Rscdisk2, Zscdisk2, nhdisk3,
 	Rscdisk3, Zscdisk3, tol)
