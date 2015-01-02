@@ -66,7 +66,7 @@ def text2array(filename):
 def text2dict(filename):
 
 	""" This function takes a .txt file and turns it into an array of arrays. """
-	""" This function is meant to be used for the SWARM website. """
+	""" This function is meant to be used for the SWARM website """
 
 	x, y, z, vx, vy, vz = numpy.loadtxt(filename, delimiter='\t', skiprows=2, unpack=True)
 
