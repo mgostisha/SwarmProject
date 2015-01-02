@@ -13,6 +13,8 @@ def getZip(fileID):
 	""" This function takes the number, or file ID (as a string) of the zip file produced by swarm and """
 	""" Retrieves it from the web, unzips it, and puts the .txt files in a directory. """
 
+	fileID = str(fileID).zfill(5)
+
 	url.urlretrieve("http://www.astro.wisc.edu/~gostisha/resource/download/swarm/swarm_"+fileID+".zip", "swarm.zip")
 
 	z = zippy.ZipFile("swarm.zip")
@@ -66,27 +68,7 @@ def text2dict(filename):
 	""" This function takes a .txt file and turns it into an array of arrays. """
 	""" This function is meant to be used for the SWARM website. """
 
-	file_open = open(filename, 'r')
-
-	header1 = file_open.readline()
-	header2 = file_open.readline()
-	columns = len(header1.strip().split())-1
-
-	count = 0
-	new_array = numpy.array([])
-
-	for line in file_open:
-		line=line.strip().split()
-		new_array = numpy.append(new_array,line).astype(float)
-		count += 1
-
-	rows = count
-	new_array = numpy.reshape(new_array, (rows,columns))
-
-	file_open.close()
-
-	x = split_cols(new_array, columns, 0); y = split_cols(new_array, columns, 1); z = split_cols(new_array, columns, 2);
-	vx = split_cols(new_array, columns, 3); vy = split_cols(new_array, columns, 4); vz = split_cols(new_array, columns, 5);
+	x, y, z, vx, vy, vz = numpy.loadtxt(filename, delimiter='\t', skiprows=2, unpack=True)
 
 	new_dict = {'x':x, 'y':y, 'z':z, 'vx':vx, 'vy':vy, 'vz':vz}
 
@@ -107,17 +89,15 @@ def allFileDict(filedir):
 		filenames.append(files)
 
 	for i in range(len(filenames)):
+		print "Unpacking: " + str(i)
 		tempdict = text2dict(filenames[i])
 		finallist.append(tempdict)
-		print i
 
 	return finallist
 
 def getData(fileID):
 
-	if (len(fileID) != 5):
-		print "The file ID must be 5 digits long (don't forget leading zeros!)."
-		raise SystemExit, 0
+	fileID = str(fileID).zfill(5)
 
 	getZip(fileID)
 	final = allFileDict(fileID)
@@ -129,13 +109,15 @@ def plotData(dictlist, xkey, ykey):
 	"""rc('text', usetex=True)"""
 	"""rc('font', **{'family':'serif', 'serif':['Computer Modern']})"""
 
-	axes().set_aspect('equal')
-	ylabel(ykey+' (pc)')
-	xlabel(xkey+' (pc)')
-	title('Orbits')
+	plt.axes().set_aspect('equal')
+	plt.ylabel(ykey+' (pc)')
+	plt.xlabel(xkey+' (pc)')
+	plt.title('Orbits')
 
 	for i in range(size(dictlist)):
-		plot(dictlist[i][xkey], dictlist[i][ykey])
+		plt.plot(dictlist[i][xkey], dictlist[i][ykey])
+
+	plt.show(block=False)
 
 def plotData3D(dictlist, xkey, ykey, zkey):
 
@@ -144,20 +126,20 @@ def plotData3D(dictlist, xkey, ykey, zkey):
 	ax.set_xlabel(xkey+' (pc)')
 	ax.set_ylabel(ykey+' (pc)')
 	ax.set_zlabel(zkey+' (pc)')
-	title('Orbits')
+	plt.title('Orbits')
 
 	for i in range(size(dictlist)):
-		plot(dictlist[i][xkey], dictlist[i][ykey], dictlist[i][zkey])
+		plt.plot(dictlist[i][xkey], dictlist[i][ykey], dictlist[i][zkey])
 
-	show()
+	plt.show(block=False)
 
 def orbitAnimate(dictlist, xkey, ykey):
     
     fig, ax = plt.subplots()
     plt.plot((0), marker='o', linestyle='None')
-    ylabel(ykey+' (pc)')
-    xlabel(xkey+' (pc)')
-    title('Orbit Animation')
+    plt.ylabel(ykey+' (pc)')
+    plt.xlabel(xkey+' (pc)')
+    plt.title('Orbit Animation')
     minx = min(dictlist[0][xkey])-1000.0; miny = min(dictlist[0][ykey])-500.0;
     maxx = max(dictlist[0][xkey])+1000.0; maxy = max(dictlist[0][ykey])+500.0;
     waittime = 10./len(dictlist[0]['x'])
