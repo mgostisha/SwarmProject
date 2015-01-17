@@ -3,12 +3,12 @@
 import numpy as np
 import mylib
 
-def PointSource(y, t, drag_optn, dragparams, velfield, denfield, N_c):
+def PointSource(y, t, drag_optn, dragparams, velfield, denfield, N_c, ps_mass):
 	""" Point Source Potential """
 
 	# Define Constants 
 	G = 0.0045
-	M = 1e+11
+	M = ps_mass
 
 	# Compute/designate spatial shorthands
 	z = y[2]
@@ -33,7 +33,7 @@ def PointSource(y, t, drag_optn, dragparams, velfield, denfield, N_c):
 		gy = (vy/vr) * drag_comps[0] + gy
 		gz = drag_comps[1] + gz
 
-	return  vx, vy, vz, gx, gy, gz
+	return vx, vy, vz, gx, gy, gz
 
 def WolfirePotential(y, t, disk, bulge, halo, drag_optn, dragparams, velfield, denfield, N_c):
 	""" All constants are in kpc (Ci, ai, bi) and km s^-1 (v_circ) """
@@ -95,7 +95,6 @@ def WolfirePotential(y, t, disk, bulge, halo, drag_optn, dragparams, velfield, d
 	else:
 		gx = (y[0]/r) * gr
 		gy = (y[1]/r) * gr
-
 
 	return vx, vy, vz, gx, gy, gz
 

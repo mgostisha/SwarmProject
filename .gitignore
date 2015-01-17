@@ -1,6 +1,9 @@
 *.pyc
 *.txt
 *.html
+*.zip
+.DS_Store
+.idea/
 plots/
 swarmtest/
 0*/

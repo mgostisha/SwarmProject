@@ -73,13 +73,13 @@ class Particle(object):
 		self.Nc = (10 ** self.Nc) * (3.09e+18)**2
 
 	# Orbit Calculation
-	def compute_orbit(self, disk_optn, bulge_optn, halo_optn, drag_optn, dragparams, vfield, denfield):
+	def compute_orbit(self, disk_optn, bulge_optn, halo_optn, drag_optn, dragparams, vfield, denfield, ps_mass):
 
 		""" This function calculates the orbits of the particle. """
 
 		if(self.potential=='pointsrc'):
 			self.orbit = inte.odeint(mf.PointSource, self.arr, self.t, rtol=self.tol, atol=self.tol,
-				args=(drag_optn, dragparams, vfield, denfield, self.Nc))
+				args=(drag_optn, dragparams, vfield, denfield, self.Nc, ps_mass))
 
 		if(self.potential=='wolfire'):
 			self.orbit = inte.odeint(mf.WolfirePotential, self.arr, self.t, rtol=self.tol, atol=self.tol,

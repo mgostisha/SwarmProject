@@ -5,7 +5,7 @@ import shutil
 
 def orbitFromFile(filename, n_steps, t_tot, potential_optn, disk_optn, bulge_optn, halo_optn, drag_optn, 
 	vfield, vzero, vRsc, denfield, nHcen, nHcen2, Rscpow, alphapow, nHdisk1, Rscdisk1, Zscdisk1, nHdisk2,
-	Rscdisk2, Zscdisk2, nHdisk3, Rscdisk3, Zscdisk3, tol):
+	Rscdisk2, Zscdisk2, nHdisk3, Rscdisk3, Zscdisk3, tol, ps_mass):
 
 	#Read in file for initial arrays
 	initials = mylib.text2array(filename)
@@ -30,6 +30,7 @@ def orbitFromFile(filename, n_steps, t_tot, potential_optn, disk_optn, bulge_opt
 	Zscdisk2 = float(Zscdisk2) * 1000.
 	Zscdisk3 = float(Zscdisk3) * 1000.
 	tol = 10 ** float(tol)
+	ps_mass = 10 ** float(ps_mass)
 
 	for i in range(len(initials)):
 		tmp = part.Particle(initials[i], potential_optn, tol)
@@ -37,7 +38,7 @@ def orbitFromFile(filename, n_steps, t_tot, potential_optn, disk_optn, bulge_opt
 		tmp.convert_units()
 		dragparams = mylib.dragParameters(vfield, denfield, vzero, vRsc, nHcen, nHcen2, Rscpow, 
 			alphapow, nHdisk1, Rscdisk1, Zscdisk1, nHdisk2, Rscdisk2, Zscdisk2, nHdisk3, Rscdisk3, Zscdisk3)
-		tmp.compute_orbit(disk_optn, bulge_optn, halo_optn, drag_optn, dragparams, vfield, denfield)
+		tmp.compute_orbit(disk_optn, bulge_optn, halo_optn, drag_optn, dragparams, vfield, denfield, ps_mass)
 		output_fn = 'particle_'+str(i)+'.txt'
 		tmp.write_file(output_fn)
 		#if (i==0):
@@ -49,7 +50,7 @@ def orbitFromFile(filename, n_steps, t_tot, potential_optn, disk_optn, bulge_opt
 def orbitFromInit(x, y, z, vx, vy, vz, sigpos, sigvel, n_particles, n_steps, t_tot, 
 	potential_optn, disk_optn, bulge_optn, halo_optn, drag_optn, vfield, vzero, vRsc,
 	denfield, nHcen, nHcen2, Rscpow, alphapow, nHdisk1, Rscdisk1, Zscdisk1, nHdisk2,
-	Rscdisk2, Zscdisk2, nHdisk3, Rscdisk3, Zscdisk3, colden, sigden, tol):
+	Rscdisk2, Zscdisk2, nHdisk3, Rscdisk3, Zscdisk3, colden, sigden, tol, ps_mass):
 
 	# Initialize array and convert to corrent data types
 	initials = numpy.array([float(x), float(y), float(z), float(vx), float(vy), float(vz), float(colden)])
@@ -81,6 +82,7 @@ def orbitFromInit(x, y, z, vx, vy, vz, sigpos, sigvel, n_particles, n_steps, t_t
 	Zscdisk2 = float(Zscdisk2) * 1000.
 	Zscdisk3 = float(Zscdisk3) * 1000.
 	tol = 10 ** float(tol)
+	ps_mass = 10 ** float(ps_mass)
 
 	for i in range(n_particles):
 		tmp = part.Particle(initials, potential_optn, tol)
@@ -89,7 +91,7 @@ def orbitFromInit(x, y, z, vx, vy, vz, sigpos, sigvel, n_particles, n_steps, t_t
 		tmp.convert_units()
 		dragparams = mylib.dragParameters(vfield, denfield, vzero, vRsc, nHcen, nHcen2, Rscpow, 
 			alphapow, nHdisk1, Rscdisk1, Zscdisk1, nHdisk2, Rscdisk2, Zscdisk2, nHdisk3, Rscdisk3, Zscdisk3)
-		tmp.compute_orbit(disk_optn, bulge_optn, halo_optn, drag_optn, dragparams, vfield, denfield)
+		tmp.compute_orbit(disk_optn, bulge_optn, halo_optn, drag_optn, dragparams, vfield, denfield, ps_mass)
 		output_fn = 'particle_'+str(i)+'.txt'
 		tmp.write_file(output_fn)
 		#if (i==0):
