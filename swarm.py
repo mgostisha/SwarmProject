@@ -140,8 +140,12 @@ def orbitAnimate(dictlist, xkey, ykey):
     plt.ylabel(ykey+' (pc)')
     plt.xlabel(xkey+' (pc)')
     plt.title('Orbit Animation')
-    minx = min(dictlist[0][xkey])-1000.0; miny = min(dictlist[0][ykey])-500.0;
-    maxx = max(dictlist[0][xkey])+1000.0; maxy = max(dictlist[0][ykey])+500.0;
+
+    minx = min([min(dictlist[i][xkey]) for i in range(len(dictlist))]) + 500.0
+    miny = min([min(dictlist[i][ykey]) for i in range(len(dictlist))]) + 500.0
+    maxx = max([max(dictlist[i][xkey]) for i in range(len(dictlist))]) + 500.0
+    maxy = max([max(dictlist[i][ykey]) for i in range(len(dictlist))]) + 500.0
+
     waittime = 10./len(dictlist[0]['x'])
 
     for t in range(len(dictlist[0][xkey])):
